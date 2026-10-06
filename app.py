@@ -1,0 +1,169 @@
+import csv
+import os
+import re
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+
+# Initialize the Flask application
+app = Flask(__name__)
+
+# Secret key is required to handle sessions (user login state)
+app.secret_key = "bca_simple_secret_key"
+
+# CSV file paths
+USERS_CSV = "users.csv"
+CONTENTS_CSV = "contents.csv"
+
+
+def initialize_csv_files():
+    """Create CSV files with headers if they do not exist."""
+    # Initialize users.csv
+    if not os.path.exists(USERS_CSV):
+        with open(USERS_CSV, mode="w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            # Writing Header row
+            writer.writerow(["name", "mobile", "email", "username", "password"])
+
+    # Initialize contents.csv
+    if not os.path.exists(CONTENTS_CSV):
+        with open(CONTENTS_CSV, mode="w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            # Writing Header row
+            writer.writerow(["username", "title", "content"])
+
+
+# Call initialization on script startup
+initialize_csv_files()
+
+
+@app.route("/")
+def index():
+    """Default route: Redirects to home if logged in, else to login page."""
+    if "username" in session:
+        return redirect(url_for("home"))
+    return redirect(url_for("login"))
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    """Registration Route: Handles user registration with Regular Expression validation."""
+    if request.method == "POST":
+        # Get data from the form
+        name = request.form.get("name", "").strip()
+        mobile = request.form.get("mobile", "").strip()
+        email = request.form.get("email", "").strip()
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+
+        # Regular Expressions for Data Validation
+        # Mobile Pattern: Exactly 10 digits starting with 6, 7, 8, or 9
+        mobile_regex = r"^[6-9]\d{9}$"
+        # Email Pattern: Standard email format (e.g., student@example.com)
+        email_regex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+
+        # Validate Mobile Number using Regex
+        if not re.match(mobile_regex, mobile):
+            flash("Invalid Mobile Number! Must be 10 digits starting with 6-9.", "error")
+            return render_template("register.html")
+
+        # Validate Email using Regex
+        if not re.match(email_regex, email):
+            flash("Invalid Email address format!", "error")
+            return render_template("register.html")
+
+        # Check if Username already exists in users.csv
+        username_exists = False
+        with open(USERS_CSV, mode="r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row["username"] == username:
+                    username_exists = True
+                    break
+
+        if username_exists:
+            flash("Username already exists! Please choose another one.", "error")
+            return render_template("register.html")
+
+        # Save new user to users.csv
+        with open(USERS_CSV, mode="a", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow([name, mobile, email, username, password])
+
+        flash("Registration successful! Please login.", "success")
+        return redirect(url_for("login"))
+
+    return render_template("register.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Login Route: Verifies user credentials against users.csv."""
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+
+        user_found = False
+        with open(USERS_CSV, mode="r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                # Compare username and password with CSV data
+                if row["username"] == username and row["password"] == password:
+                    user_found = True
+                    # Store logged-in username in session
+                    session["username"] = username
+                    session["name"] = row["name"]
+                    break
+
+        if user_found:
+            flash("Login successful!", "success")
+            return redirect(url_for("home"))
+        else:
+            flash("Invalid Username or Password!", "error")
+
+    return render_template("login.html")
+
+
+@app.route("/home")
+def home():
+    """Home Page Route: Accessible only after login."""
+    if "username" not in session:
+        flash("Please login to access the Home page.", "error")
+        return redirect(url_for("login"))
+
+    # Read contents from contents.csv to display
+    contents_list = []
+    with open(CONTENTS_CSV, mode="r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            contents_list.append(row)
+
+    return render_template("home.html", username=session.get("username"), name=session.get("name"), contents=contents_list)
+
+
+@app.route("/add_content", methods=["POST"])
+def add_content():
+    """Add Content Route: Appends new content details into contents.csv."""
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    title = request.form.get("title", "").strip()
+    content = request.form.get("content", "").strip()
+
+    if title and content:
+        with open(CONTENTS_CSV, mode="a", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow([session["username"], title, content])
+        flash("Content added successfully!", "success")
+        
+    return redirect(url_for("home"))
+
+
+@app.route("/logout")
+def logout():
+    """Logout Route: Clears user session."""
+    session.clear()
+    flash("You have logged out.", "info")
+    return redirect(url_for("login"))
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

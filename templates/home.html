@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="card-container home-container">
+        <h2>Welcome, {{ name }}!</h2>
+        <p class="sub-title">Logged in as @{{ username }}</p>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- 3 Buttons as required -->
+        <div class="button-grid">
+            <button class="btn btn-action btn-add" onclick="openModal('addModal')">➕ Add Contents</button>
+            <button class="btn btn-action btn-display" onclick="openModal('displayModal')">📋 Display Contents</button>
+            <a href="{{ url_for('logout') }}" class="btn btn-action btn-logout">🚪 Logout</a>
+        </div>
+    </div>
+
+    <!-- POPUP MODAL 1: Add Content Form -->
+    <div id="addModal" class="modal-overlay">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('addModal')">&times;</span>
+            <h2>Add New Content</h2>
+            <p class="sub-title">Store data into contents.csv</p>
+
+            <form action="{{ url_for('add_content') }}" method="POST">
+                <div class="form-group">
+                    <label for="title">Title / Subject</label>
+                    <input type="text" id="title" name="title" placeholder="Enter content title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Content Details</label>
+                    <textarea id="content" name="content" rows="4" placeholder="Enter your text or notes here..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-add">Save Content</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- POPUP MODAL 2: Display Contents -->
+    <div id="displayModal" class="modal-overlay">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('displayModal')">&times;</span>
+            <h2>Saved CSV Contents</h2>
+            <p class="sub-title">Data loaded directly from contents.csv</p>
+
+            <div class="content-list">
+                {% if contents %}
+                    {% for item in contents %}
+                        <div class="content-card">
+                            <h4>{{ item.title }}</h4>
+                            <p>{{ item.content }}</p>
+                            <div class="author">Added by: @{{ item.username }}</div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-data">No content available in CSV file yet. Click "Add Contents" to add some!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Simple JavaScript for Modal Controls (Easy for 1st Year BCA Students) -->
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modal when user clicks outside the box
+        window.onclick = function(event) {
+            var addModal = document.getElementById('addModal');
+            var displayModal = document.getElementById('displayModal');
+            if (event.target == addModal) {
+                addModal.style.display = "none";
+            }
+            if (event.target == displayModal) {
+                displayModal.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>

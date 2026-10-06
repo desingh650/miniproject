@@ -1,0 +1,288 @@
+/* ======================================================
+   Clean & Modern White Theme CSS Styling
+   Designed for 1st Year BCA Students
+   ====================================================== */
+
+/* Reset basic styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Body Background & Centering - Soft Off-White Theme */
+body {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: #1f2937;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Card Container for Forms */
+.card-container {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 35px 30px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.home-container {
+    max-width: 700px;
+    text-align: center;
+}
+
+/* Headings */
+h2 {
+    color: #1e40af;
+    margin-bottom: 8px;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.sub-title {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 18px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    color: #111827;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s, box-shadow 0.2s;
+    margin-top: 10px;
+    text-decoration: none;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.btn:hover {
+    background: linear-gradient(90deg, #1d4ed8, #1e40af);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -2px rgba(37, 99, 235, 0.3);
+}
+
+/* Home Action Buttons Grid */
+.button-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn-action {
+    flex: 1;
+    min-width: 180px;
+    padding: 15px 20px;
+    font-size: 15px;
+}
+
+.btn-add {
+    background: linear-gradient(90deg, #10b981, #059669);
+    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+}
+
+.btn-add:hover {
+    background: linear-gradient(90deg, #059669, #047857);
+}
+
+.btn-display {
+    background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+    box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.2);
+}
+
+.btn-display:hover {
+    background: linear-gradient(90deg, #7c3aed, #6d28d9);
+}
+
+.btn-logout {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+    box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
+}
+
+.btn-logout:hover {
+    background: linear-gradient(90deg, #dc2626, #b91c1c);
+}
+
+/* Alert Messages (Flash) */
+.alert-container {
+    margin-bottom: 20px;
+}
+
+.alert {
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.alert-error {
+    background-color: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+}
+
+.alert-success {
+    background-color: #ecfdf5;
+    border: 1px solid #6ee7b7;
+    color: #065f46;
+}
+
+.alert-info {
+    background-color: #eff6ff;
+    border: 1px solid #93c5fd;
+    color: #1e40af;
+}
+
+/* Links */
+.link-text {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.link-text a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.link-text a:hover {
+    text-decoration: underline;
+}
+
+/* ======================================================
+   Popup Modal Styling (White Theme)
+   ====================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-box {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    color: #9ca3af;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.close-btn:hover {
+    color: #111827;
+}
+
+/* Display Content List */
+.content-list {
+    margin-top: 15px;
+    text-align: left;
+}
+
+.content-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 12px;
+}
+
+.content-card h4 {
+    color: #1d4ed8;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.content-card p {
+    color: #374151;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.content-card .author {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 8px;
+    font-style: italic;
+}
+
+.no-data {
+    color: #6b7280;
+    font-style: italic;
+    padding: 15px;
+}
